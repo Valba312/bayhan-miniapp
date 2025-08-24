@@ -5,7 +5,7 @@ const SECRET = process.env.SESSION_SECRET || "dev_secret";
 
 export interface JwtPayload {
   uid: number;
-  role: "OWNER" | "ADMIN";
+  role: string;
 }
 
 export function signJwt(payload: JwtPayload): string {

@@ -7,65 +7,41 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-enum Role {
-  OWNER
-  ADMIN
-}
-
-enum SlotType {
-  REGULAR
-  HOLIDAY
-  BLOCKED
-}
-
-enum BookingStatus {
-  PENDING
-  CONFIRMED
-  DECLINED
-  CANCELED
-  SWAPPED
-}
-
-enum ExchangeStatus {
-  PENDING
-  CONFIRMED
-  DECLINED
-  CANCELED
-}
-
 model User {
-  id        Int       @id @default(autoincrement())
-  tgId      String    @unique
+  id        Int      @id @default(autoincrement())
+  tgId      String   @unique
   chatId    String?
-  role      Role      @default(OWNER)
+  role      String   @default("OWNER")
   firstName String?
   lastName  String?
   username  String?
   phone     String?
   email     String?
-  language  String?   @default("ru")
-  createdAt DateTime  @default(now())
+  language  String?  @default("ru")
+  createdAt DateTime @default(now())
 
-  ownerships Ownership[]
-  bookings   Booking[]
-  messages   ExchangeMessage[]
-  notifications Notification[]
+  ownerships           Ownership[]
+  bookings             Booking[]
+  messages             ExchangeMessage[]
+  notifications        Notification[]
+  exchangeRequestsFrom ExchangeRequest[] @relation("FromUser")
+  exchangeRequestsTo   ExchangeRequest[] @relation("ToUser")
 
   @@index([role])
 }
 
 model Property {
-  id           Int       @id @default(autoincrement())
+  id           Int      @id @default(autoincrement())
   name         String
   description  String?
   location     String?
   lat          Float?
   lng          Float?
-  images       Json
+  images       String // JSON-encoded array of image URLs
   rooms        Int?
   areaM2       Int?
   fractionText String?
-  createdAt    DateTime  @default(now())
+  createdAt    DateTime @default(now())
 
   ownerships Ownership[]
   slots      BookingSlot[]
@@ -74,12 +50,12 @@ model Property {
 }
 
 model Ownership {
-  id                Int      @id @default(autoincrement())
+  id                Int @id @default(autoincrement())
   userId            Int
   propertyId        Int
   fraction          Int
-  queueIndex        Int      @default(0)
-  holidayQueueIndex Int      @default(0)
+  queueIndex        Int @default(0)
+  holidayQueueIndex Int @default(0)
 
   user     User     @relation(fields: [userId], references: [id])
   property Property @relation(fields: [propertyId], references: [id])
@@ -89,60 +65,61 @@ model Ownership {
 }
 
 model BookingSlot {
-  id         Int       @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   propertyId Int
   startDate  DateTime
   endDate    DateTime
-  slotType   SlotType  @default(REGULAR)
-  isOpen     Boolean   @default(true)
+  slotType   String   @default("REGULAR")
+  isOpen     Boolean  @default(true)
 
-  property Property @relation(fields: [propertyId], references: [id])
-  bookings Booking[]
+  property         Property          @relation(fields: [propertyId], references: [id])
+  bookings         Booking[]
+  exchangeRequests ExchangeRequest[]
 
   @@unique([propertyId, startDate])
   @@index([propertyId, isOpen, slotType])
 }
 
 model Booking {
-  id        Int           @id @default(autoincrement())
+  id        Int      @id @default(autoincrement())
   userId    Int
   slotId    Int
-  status    BookingStatus @default(PENDING)
+  status    String   @default("PENDING")
   note      String?
-  createdAt DateTime      @default(now())
+  createdAt DateTime @default(now())
 
-  user User @relation(fields: [userId], references: [id])
+  user User        @relation(fields: [userId], references: [id])
   slot BookingSlot @relation(fields: [slotId], references: [id])
 
   exchangeRequestsFrom ExchangeRequest[] @relation("FromBooking")
 }
 
 model ExchangeRequest {
-  id            Int            @id @default(autoincrement())
+  id            Int      @id @default(autoincrement())
   fromUserId    Int
   toUserId      Int?
   fromBookingId Int
   toSlotId      Int?
-  status        ExchangeStatus @default(PENDING)
-  createdAt     DateTime       @default(now())
+  status        String   @default("PENDING")
+  createdAt     DateTime @default(now())
 
-  fromUser User @relation(fields: [fromUserId], references: [id])
-  toUser   User? @relation(fields: [toUserId], references: [id])
-  fromBooking Booking @relation("FromBooking", fields: [fromBookingId], references: [id])
-  toSlot  BookingSlot? @relation(fields: [toSlotId], references: [id])
+  fromUser    User         @relation("FromUser", fields: [fromUserId], references: [id])
+  toUser      User?        @relation("ToUser", fields: [toUserId], references: [id])
+  fromBooking Booking      @relation("FromBooking", fields: [fromBookingId], references: [id])
+  toSlot      BookingSlot? @relation(fields: [toSlotId], references: [id])
 
   messages ExchangeMessage[]
 }
 
 model ExchangeMessage {
-  id               Int       @id @default(autoincrement())
+  id                Int      @id @default(autoincrement())
   exchangeRequestId Int
-  senderId         Int
-  content          String
-  createdAt        DateTime  @default(now())
+  senderId          Int
+  content           String
+  createdAt         DateTime @default(now())
 
   exchangeRequest ExchangeRequest @relation(fields: [exchangeRequestId], references: [id])
-  sender          User @relation(fields: [senderId], references: [id])
+  sender          User            @relation(fields: [senderId], references: [id])
 }
 
 model Holiday {
@@ -158,7 +135,7 @@ model Notification {
   id        Int      @id @default(autoincrement())
   userId    Int
   type      String
-  payload   Json
+  payload   String // JSON-encoded payload
   createdAt DateTime @default(now())
 
   user User @relation(fields: [userId], references: [id])
