@@ -28,10 +28,10 @@ async function main() {
       location: "Côte d'Azur, France",
       lat: 43.552847,
       lng: 7.017369,
-      images: [
+      images: JSON.stringify([
         'https://images.unsplash.com/photo-1505691938895-1758d7feb511?q=80&w=1200&auto=format&fit=crop',
         'https://images.unsplash.com/photo-1505692794403-34d4982f88aa?q=80&w=1200&auto=format&fit=crop'
-      ],
+      ]),
       rooms: 4,
       areaM2: 240,
       fractionText: '1/8'
