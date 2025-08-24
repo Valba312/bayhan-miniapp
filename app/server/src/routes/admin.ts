@@ -14,7 +14,7 @@ router.get("/users", async (_req, res) => {
 
 router.get("/properties", async (_req, res) => {
   const props = await prisma.property.findMany({ orderBy: { id: "asc" } });
-  res.json({ ok: true, data: props });
+  res.json({ ok: true, data: props.map((p) => ({ ...p, images: JSON.parse(p.images || '[]') })) });
 });
 
 router.post(
@@ -22,8 +22,8 @@ router.post(
   validateBody(z.object({ name: z.string(), description: z.string().optional(), location: z.string().optional(), images: z.array(z.string()).default([]), rooms: z.number().int().optional(), areaM2: z.number().int().optional(), fractionText: z.string().optional() })),
   async (req, res) => {
     const d = (req as any).data;
-    const p = await prisma.property.create({ data: { ...d, images: d.images } });
-    res.json({ ok: true, data: p });
+    const p = await prisma.property.create({ data: { ...d, images: JSON.stringify(d.images) } });
+    res.json({ ok: true, data: { ...p, images: JSON.parse(p.images) } });
   }
 );
 
@@ -32,8 +32,12 @@ router.patch(
   validateBody(z.object({ name: z.string().optional(), description: z.string().optional(), location: z.string().optional(), images: z.array(z.string()).optional(), rooms: z.number().int().optional(), areaM2: z.number().int().optional(), fractionText: z.string().optional() })),
   async (req, res) => {
     const id = Number(req.params.id);
-    const p = await prisma.property.update({ where: { id }, data: (req as any).data });
-    res.json({ ok: true, data: p });
+    const d = (req as any).data;
+    const p = await prisma.property.update({
+      where: { id },
+      data: { ...d, images: d.images ? JSON.stringify(d.images) : undefined }
+    });
+    res.json({ ok: true, data: { ...p, images: JSON.parse(p.images) } });
   }
 );
 
