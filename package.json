@@ -1,0 +1,48 @@
+{
+  "name": "bayhan-miniapp",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Telegram Mini-App (WebApp) for fractional real estate 'Bayhan'",
+  "scripts": {
+    "postinstall": "prisma generate && npm --prefix app/client install",
+    "build": "npm --prefix app/client run build && tsc -p app/server/tsconfig.json",
+    "start": "node app/server/dist/index.js",
+    "dev": "concurrently \"npm:dev:server\" \"npm:dev:client\"",
+    "dev:server": "ts-node --transpile-only app/server/src/index.ts",
+    "dev:client": "npm --prefix app/client run dev",
+    "test": "vitest run",
+    "pretest": "prisma db push && prisma db seed",
+    "prisma:push": "prisma db push",
+    "prisma:seed": "prisma db seed"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.18.0",
+    "cookie-parser": "^1.4.6",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "morgan": "^1.10.0",
+    "node-telegram-bot-api": "^0.66.0",
+    "zod": "^3.23.8"
+  },
+  "devDependencies": {
+    "@types/cookie-parser": "^1.4.7",
+    "@types/express": "^4.17.21",
+    "@types/jsonwebtoken": "^9.0.6",
+    "@types/node": "^20.14.12",
+    "concurrently": "^9.0.1",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-import": "^2.29.1",
+    "prettier": "^3.3.3",
+    "prisma": "^5.18.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.5.4",
+    "vitest": "^1.6.0"
+  }
+}

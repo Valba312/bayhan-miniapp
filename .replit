@@ -1,0 +1,3 @@
+run = "npm run build && npm run prisma:push && npm run prisma:seed && npm start"
+language = "nodejs"
+entrypoint = "app/server/dist/index.js"

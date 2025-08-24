@@ -1,0 +1,6 @@
+.header { display: flex; justify-content: space-between; align-items: center; margin-top: 6px; }
+.title { font-size: 18px; font-weight: 700; }
+.subtitle { font-size: 12px; color: var(--hint); }
+.meta { display: flex; gap: 12px; margin-top: 6px; font-size: 12px; color: var(--hint); }
+.actions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+.manager { margin-top: 6px; font-size: 12px; color: var(--hint); }

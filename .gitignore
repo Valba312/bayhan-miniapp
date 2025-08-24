@@ -1,0 +1,18 @@
+# Node
+node_modules/
+npm-debug.log*
+pnpm-lock.yaml
+yarn.lock
+
+# Builds
+app/client/dist/
+app/server/dist/
+
+# Env & DB
+.env
+*.db
+*.db-journal
+
+# OS
+.DS_Store
+Thumbs.db
