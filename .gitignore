@@ -7,6 +7,7 @@ yarn.lock
 # Builds
 app/client/dist/
 app/server/dist/
+public/
 
 # Env & DB
 .env

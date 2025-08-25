@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { apiGet, useAuth } from "../../lib/auth";
+import { apiGet, useAuth } from "../../auth";
 
 const AdminProperties: React.FC = () => {
   const { token } = useAuth();
