@@ -19,7 +19,9 @@
 - `npm test` — Vitest (HMAC initData, создание заявки).
 
 ## API (основное)
-- `POST /api/auth/telegram/verify` — HMAC‑проверка initData и JWT.
+- `POST /api/auth/telegram` — HMAC‑проверка initData и JWT.
+- `GET /api/auth/verify` — проверка токена.
+- `POST /api/auth/dev` — dev‑JWT (если разрешено).
 - `GET /api/properties`
 - `GET /api/properties/:id/slots?from&to`
 - `POST /api/bookings/:slotId/request`

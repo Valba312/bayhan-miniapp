@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { apiGet } from "../../lib/auth";
-import { useAuth } from "../../lib/auth";
+import { apiGet, useAuth } from "../../auth";
 
 const Home: React.FC = () => {
   const { token } = useAuth();

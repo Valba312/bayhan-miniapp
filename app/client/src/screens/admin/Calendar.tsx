@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { apiGet, apiPost, useAuth } from "../../lib/auth";
+import { apiGet, apiPost, useAuth } from "../../auth";
 
 const AdminCalendar: React.FC = () => {
   const { token } = useAuth();

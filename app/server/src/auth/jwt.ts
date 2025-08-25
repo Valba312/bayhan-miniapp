@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import { Request, Response, NextFunction } from "express";
+import { ApiError } from "../middlewares/error";
 
 const SECRET = process.env.SESSION_SECRET || "dev_secret";
 
@@ -13,7 +14,11 @@ export function signJwt(payload: JwtPayload): string {
 }
 
 export function verifyJwt(token: string): JwtPayload {
-  return jwt.verify(token, SECRET) as JwtPayload;
+  try {
+    return jwt.verify(token, SECRET) as JwtPayload;
+  } catch {
+    throw new ApiError(401, "Invalid token");
+  }
 }
 
 export function requireAuth(req: Request, _res: Response, next: NextFunction) {
@@ -29,10 +34,13 @@ export function requireAuth(req: Request, _res: Response, next: NextFunction) {
   }
 }
 
+const allowedRoles = ["ADMIN", "OWNER"];
+
 export function requireRole(role: "ADMIN" | "OWNER") {
   return (req: Request, _res: Response, next: NextFunction) => {
     const user = (req as any).user as JwtPayload | undefined;
     if (!user) return next(new Error("Unauthorized"));
+    if (!allowedRoles.includes(user.role)) return next(new Error("Forbidden"));
     if (role === "ADMIN" && user.role !== "ADMIN") return next(new Error("Forbidden"));
     next();
   };

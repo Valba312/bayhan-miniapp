@@ -1,6 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useAuth } from "../../lib/auth";
+import { useAuth } from "../../auth";
 
 const AdminDashboard: React.FC = () => {
   const { user } = useAuth();
