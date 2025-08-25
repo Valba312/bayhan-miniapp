@@ -14,7 +14,8 @@ function checkRateLimit(userId: number) {
 }
 
 export async function listProperties() {
-  return prisma.property.findMany({ include: { ownerships: true } });
+  const props = await prisma.property.findMany({ include: { ownerships: true } });
+  return props.map((p) => ({ ...p, images: JSON.parse(p.images || '[]') }));
 }
 
 export async function listSlots(propertyId: number, from?: Date, to?: Date) {

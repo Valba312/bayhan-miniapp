@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { apiGet } from "../../lib/auth";
-import { useAuth } from "../../lib/auth";
+import { apiGet, useAuth } from "../../auth";
 
 const Home: React.FC = () => {
   const { token } = useAuth();
@@ -9,7 +8,6 @@ const Home: React.FC = () => {
   const nav = useNavigate();
 
   useEffect(() => {
-    if (!token) return;
     apiGet("/api/properties", token).then(setProps).catch(console.error);
   }, [token]);
 

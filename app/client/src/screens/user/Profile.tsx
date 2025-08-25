@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { apiGet, useAuth } from "../../lib/auth";
+import { apiGet, useAuth } from "../../auth";
 
 const Profile: React.FC = () => {
   const { token } = useAuth();
   const [profile, setProfile] = useState<any | null>(null);
 
   useEffect(() => {
-    if (!token) return;
     apiGet("/api/bookings/profile", token).then(setProfile).catch(console.error);
   }, [token]);
 

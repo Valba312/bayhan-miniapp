@@ -2,7 +2,7 @@ import React from "react";
 import { createRoot } from "react-dom/client";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import "./styles/global.scss";
-import { AuthProvider, useAuth } from "./lib/auth";
+import { AuthProvider, Private } from "./auth";
 import Home from "./screens/user/Home";
 import Booking from "./screens/user/Booking";
 import Swap from "./screens/user/Swap";
@@ -12,12 +12,6 @@ import AdminDashboard from "./screens/admin/Dashboard";
 import AdminCalendar from "./screens/admin/Calendar";
 import AdminProperties from "./screens/admin/Properties";
 import ExchangesModeration from "./screens/admin/ExchangesModeration";
-
-function Private({ children }: { children: React.ReactNode }) {
-  const { token } = useAuth();
-  if (!token) return <div style={{ padding: 16 }}>Авторизация…</div>;
-  return <>{children}</>;
-}
 
 const App = () => (
   <AuthProvider>

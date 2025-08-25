@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { apiGet, apiPost, useAuth } from "../../lib/auth";
+import { apiGet, apiPost, useAuth } from "../../auth";
 import CalendarGrid from "../../components/CalendarGrid";
 import { getTg } from "../../lib/telegram";
 import { useNavigate } from "react-router-dom";
